@@ -1,42 +1,8 @@
-# S3 Image Gallery - Vue Slideshow
+# S3 Image Gallery - Slideshow
 
-A modern Vue.js application that fetches and displays images from a publicly accessible AWS S3 bucket in an interactive slideshow format.
+A simple JavaScript application that fetches and displays images from a publicly accessible AWS S3 bucket in an interactive slideshow format.
 
-## 🚀 Two Versions Available
-
-### 1. **Standalone Version** (No Node.js Required) ⭐ RECOMMENDED
-- **Location**: `standalone/index.html`
-- **Requirements**: Just a web browser
-- **Setup**: Open `index.html` in any browser
-- **Perfect for**: Quick deployment, simple hosting, no build process
-
-### 2. **Development Version** (With Build Tools)
-- **Location**: Root directory
-- **Requirements**: Node.js and npm
-- **Setup**: `npm install` then `npm run dev`
-- **Perfect for**: Custom development, advanced features, npm ecosystem
-
----
-
-## Standalone Version (Zero Dependencies)
-
-### Quick Start
-1. Open `standalone/index.html` in your web browser
-2. That's it! No installation needed.
-
-### Features
-- ✅ Single HTML file - no dependencies
-- ✅ Works offline (after first load)
-- ✅ Vue 3 loaded from CDN
-- ✅ Full slideshow functionality
-
-**See [standalone/README.md](standalone/README.md) for detailed documentation.**
-
----
-
-## Development Version (Build Tools)
-
-### Features
+## Features
 
 - 🖼️ **S3 Integration**: Fetches images directly from the `tabs.14strings.com` S3 bucket
 - 📝 **Dynamic Captions**: Displays captions from S3 object metadata (`caption` key)
@@ -45,193 +11,95 @@ A modern Vue.js application that fetches and displays images from a publicly acc
 - 🖱️ **Navigation Controls**: Navigate using previous/next buttons or thumbnail navigation
 - 🌓 **Dark/Light Mode**: Automatically adapts to system color scheme preference
 - ⚠️ **Error Handling**: Gracefully handles missing images, metadata, and network errors
+- ✅ **Zero Dependencies**: Pure vanilla JavaScript - no frameworks, no build tools
 
-### Tech Stack
+## Quick Start
 
-- **Vue 3** - Progressive JavaScript framework
-- **Vite** - Next-generation frontend build tool
-
-### Prerequisites
-
-- Node.js (version 16 or higher)
-- npm (version 8 or higher)
-
-### Installation
-
-1. Clone the repository:
+1. **Clone the repository**:
 ```bash
 git clone https://github.com/bacota/vue-s3-slideshow.git
 cd vue-s3-slideshow
 ```
 
-2. Install dependencies:
-```bash
-npm install
-```
+2. **Open in browser**:
+   - Simply open `index.html` in your web browser
+   - Or serve with any HTTP server:
+     ```bash
+     # Python 3
+     python3 -m http.server 8000
+     
+     # Python 2
+     python -m SimpleHTTPServer 8000
+     
+     # Node.js (if available)
+     npx http-server
+     ```
 
-### Development
-
-Run the development server:
-
-```bash
-npm run dev
-```
-
-The application will be available at `http://localhost:5173/`
-
-### Build for Production
-
-Create a production build:
-
-```bash
-npm run build
-```
-
-The optimized files will be generated in the `dist/` directory.
-
-### Preview Production Build
-
-Preview the production build locally:
-
-```bash
-npm run preview
-```
-
-## Deployment
-
-### Standalone Version
-
-Simply upload `standalone/index.html` to:
-- GitHub Pages
-- Netlify (drag & drop)
-- Any web server
-- AWS S3 static hosting
-- Or distribute as a file
-
-### Development Version
-
-#### Deploy to Netlify
-
-1. Install Netlify CLI:
-```bash
-npm install -g netlify-cli
-```
-
-2. Build the project:
-```bash
-npm run build
-```
-
-3. Deploy:
-```bash
-netlify deploy --prod --dir=dist
-```
-
-#### Deploy to Vercel
-
-1. Install Vercel CLI:
-```bash
-npm install -g vercel
-```
-
-2. Deploy:
-```bash
-vercel --prod
-```
-
-#### Deploy to GitHub Pages
-
-1. Update `vite.config.js` to set the base path:
-```js
-export default defineConfig({
-  plugins: [vue()],
-  base: '/vue-s3-slideshow/'
-})
-```
-
-2. Build the project:
-```bash
-npm run build
-```
-
-3. Deploy the `dist/` folder to GitHub Pages
-
-#### Deploy to AWS S3 + CloudFront
-
-1. Build the project:
-```bash
-npm run build
-```
-
-2. Upload the `dist/` folder contents to an S3 bucket configured for static website hosting
-
-3. (Optional) Set up CloudFront distribution for CDN delivery
-
-## Configuration
-
-### Changing the S3 Bucket
-
-**Standalone version:** Edit `standalone/index.html` and change:
-```javascript
-const BUCKET_NAME = 'your-bucket-name.example.com';
-```
-
-**Development version:** Edit `src/services/s3Service.js` and change:
-```javascript
-const BUCKET_NAME = 'your-bucket-name.example.com';
-```
-
-### Adjusting Auto-play Speed
-
-**Standalone version:** Edit `standalone/index.html` and change:
-```javascript
-const AUTO_PLAY_DELAY = 3000; // Time in milliseconds
-```
-
-**Development version:** Edit `src/components/Slideshow.vue` and change:
-```javascript
-const AUTO_PLAY_DELAY = 3000; // Time in milliseconds
-```
+That's it! No build process, no dependencies to install.
 
 ## Project Structure
 
 ```
 vue-s3-slideshow/
-├── standalone/           # Standalone single-file version
-│   ├── index.html       # Complete SPA in one file
-│   └── README.md        # Standalone documentation
-├── src/                 # Development version source
-│   ├── components/
-│   │   └── Slideshow.vue
-│   ├── services/
-│   │   └── s3Service.js
-│   ├── App.vue
-│   ├── main.js
-│   └── style.css
-├── public/              # Static assets
-├── index.html           # HTML template (dev version)
-├── package.json         # Project dependencies
-├── vite.config.js       # Vite configuration
-└── README.md            # This file
+├── index.html          # Main HTML file with embedded styles
+├── app.js              # All application logic in a single file
+├── README.md           # This file
+└── .gitignore          # Git ignore rules
 ```
+
+## Configuration
+
+All configuration is done in `app.js`:
+
+### Change S3 Bucket
+
+Edit the `BUCKET_NAME` constant in `app.js`:
+
+```javascript
+const BUCKET_NAME = 'your-bucket-name.example.com';
+```
+
+### Adjust Auto-play Speed
+
+Edit the `AUTO_PLAY_DELAY` constant in `app.js`:
+
+```javascript
+const AUTO_PLAY_DELAY = 3000; // Time in milliseconds
+```
+
+### Enable Demo Mode
+
+For testing without S3 access, set `USE_DEMO_MODE` to `true` in `app.js`:
+
+```javascript
+const USE_DEMO_MODE = true;
+```
+
+This will load sample images from Unsplash instead of the S3 bucket.
 
 ## How It Works
 
-1. **Fetching Images**: Makes HTTP requests to fetch the S3 bucket listing
-2. **Filtering**: Only files with image extensions (jpg, jpeg, png, gif, webp, bmp) are included
-3. **Metadata Retrieval**: For each image, a HEAD request fetches the object metadata
-4. **Caption Extraction**: The `caption` metadata key is used for image captions (falls back to filename if not available)
-5. **Display**: Images are displayed in a responsive slideshow with navigation controls
+1. **Direct HTTP Requests**: Uses the Fetch API to access the public S3 bucket
+2. **XML Parsing**: Parses S3 bucket listing XML responses using DOMParser
+3. **Metadata Extraction**: Fetches object metadata using HEAD requests for the `x-amz-meta-caption` header
+4. **Image Filtering**: Only includes files with image extensions (jpg, jpeg, png, gif, webp, bmp)
+5. **Vanilla JavaScript**: Pure DOM manipulation for rendering, no frameworks needed
 
-## Error Handling
+## Deployment
 
-The application includes comprehensive error handling:
+### Static Hosting
 
-- **Network Errors**: Displays a retry button if the initial fetch fails
-- **Missing Metadata**: Uses filename as fallback when caption metadata is unavailable
-- **Image Load Errors**: Shows a placeholder image if an image fails to load
-- **Empty Bucket**: Displays a friendly message when no images are found
-- **CORS Errors**: Graceful error messages when bucket access is restricted
+Upload both `index.html` and `app.js` to any static hosting service:
+
+- **GitHub Pages**: Push to a gh-pages branch
+- **Netlify**: Drag and drop both files
+- **Vercel**: Deploy the repository
+- **AWS S3**: Upload to a bucket configured for static website hosting
+- **Any web server**: Apache, Nginx, etc.
+
+### Local File
+
+You can also distribute both files together - users can open `index.html` directly from their computer (though some browsers may restrict local file access for security).
 
 ## Browser Compatibility
 
@@ -263,6 +131,37 @@ For the application to work properly, the S3 bucket must:
    - Metadata key: `caption`
    - Example: `x-amz-meta-caption: "Beautiful sunset over the ocean"`
 
+## Error Handling
+
+The application includes comprehensive error handling:
+
+- **Network Errors**: Displays a retry button if the initial fetch fails
+- **Missing Metadata**: Uses filename as fallback when caption metadata is unavailable
+- **Image Load Errors**: Shows a placeholder image if an image fails to load
+- **Empty Bucket**: Displays a friendly message when no images are found
+- **CORS Errors**: Graceful error messages when bucket access is restricted
+
+## Customization
+
+### Styling
+
+All styles are embedded in the `<style>` section of `index.html`. You can customize:
+
+- Colors (search for `#646cff`, `#764ba2`, etc.)
+- Layout dimensions (`.image-wrapper { height: 500px }`)
+- Fonts and typography
+- Animations and transitions
+
+### Functionality
+
+All JavaScript logic is in `app.js`. The code is organized into sections:
+
+- **Configuration**: Constants for bucket name, demo mode, etc.
+- **State Management**: Simple object to track application state
+- **S3 Service Functions**: Functions to fetch images and metadata
+- **UI Functions**: Rendering and DOM manipulation
+- **Action Functions**: Event handlers for user interactions
+
 ## License
 
 MIT
@@ -274,4 +173,5 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## Support
 
 For issues and questions, please open an issue on the GitHub repository.
+
 
