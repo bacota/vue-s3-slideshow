@@ -59,6 +59,14 @@ Edit the `BUCKET_NAME` constant in `app.js`:
 const BUCKET_NAME = 'your-bucket-name.example.com';
 ```
 
+### Change S3 Folder
+
+Edit the `S3_FOLDER` constant in `app.js` to read images from a specific folder:
+
+```javascript
+const S3_FOLDER = 'roster'; // Default: reads from 'roster' folder
+```
+
 ### Adjust Auto-play Speed
 
 Edit the `AUTO_PLAY_DELAY` constant in `app.js`:
@@ -81,9 +89,10 @@ This will load sample images from Unsplash instead of the S3 bucket.
 
 1. **Direct HTTP Requests**: Uses the Fetch API to access the public S3 bucket
 2. **XML Parsing**: Parses S3 bucket listing XML responses using DOMParser
-3. **Metadata Extraction**: Fetches object metadata using HEAD requests for the `x-amz-meta-caption` header
-4. **Image Filtering**: Only includes files with image extensions (jpg, jpeg, png, gif, webp, bmp)
-5. **Vanilla JavaScript**: Pure DOM manipulation for rendering, no frameworks needed
+3. **Folder Filtering**: Reads images only from the `roster` folder in the S3 bucket
+4. **Metadata Extraction**: Fetches object metadata using HEAD requests for the `x-amz-meta-caption` header
+5. **Image Filtering**: Only includes files with image extensions (jpg, jpeg, png, gif, webp, bmp)
+6. **Vanilla JavaScript**: Pure DOM manipulation for rendering, no frameworks needed
 
 ## Deployment
 

@@ -2,45 +2,32 @@
 // Configuration
 const BUCKET_NAME = 'tabs.14strings.com';
 const BUCKET_URL = `https://${BUCKET_NAME}`;
+const S3_FOLDER = 'roster'; // S3 folder to read images from
 const USE_DEMO_MODE = false;
 const AUTO_PLAY_DELAY = 3000; // milliseconds
 
 // Demo images for testing
 const DEMO_IMAGES = [
     {
-        key: 'demo/sample-1.jpg',
+        key: 'roster/player-1.jpg',
         url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200',
-        caption: 'Beautiful Mountain Landscape',
+        caption: 'Player 1',
         size: 245678,
         lastModified: new Date('2024-01-15'),
     },
     {
-        key: 'demo/sample-2.jpg',
+        key: 'roster/player-2.jpg',
         url: 'https://images.unsplash.com/photo-1511884642898-4c92249e20b6?w=1200',
-        caption: 'Serene Ocean View',
+        caption: 'Player 2',
         size: 312456,
         lastModified: new Date('2024-01-16'),
     },
     {
-        key: 'demo/sample-3.jpg',
+        key: 'roster/player-3.jpg',
         url: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1200',
-        caption: 'Forest Trail',
+        caption: 'Player 3',
         size: 287931,
         lastModified: new Date('2024-01-17'),
-    },
-    {
-        key: 'demo/sample-4.jpg',
-        url: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1200',
-        caption: 'Desert Sunset',
-        size: 298765,
-        lastModified: new Date('2024-01-18'),
-    },
-    {
-        key: 'demo/sample-5.jpg',
-        url: 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=1200',
-        caption: 'Tropical Paradise',
-        size: 325890,
-        lastModified: new Date('2024-01-19'),
     },
 ];
 
@@ -126,7 +113,10 @@ async function fetchImagesFromS3() {
         const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp'];
         const imageObjects = objects.filter(obj => {
             const key = obj.Key.toLowerCase();
-            return imageExtensions.some(ext => key.endsWith(ext));
+            // Filter by folder and image extension
+            const isInRosterFolder = key.startsWith(S3_FOLDER.toLowerCase() + '/');
+            const isImage = imageExtensions.some(ext => key.endsWith(ext));
+            return isInRosterFolder && isImage;
         });
 
         const imagesWithMetadata = await Promise.all(
