@@ -152,6 +152,12 @@ async function fetchImagesFromS3() {
 }
 
 // UI Functions
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
 function render() {
     const container = document.getElementById('slideshow-container');
     
@@ -169,7 +175,7 @@ function render() {
         container.innerHTML = `
             <div class="error">
                 <h2>⚠️ Error Loading Images</h2>
-                <p>${state.error}</p>
+                <p>${escapeHtml(state.error)}</p>
                 <button onclick="retryFetch()" class="retry-button">Retry</button>
             </div>
         `;
@@ -192,8 +198,8 @@ function render() {
             ${state.images.map((img, index) => `
                 <div 
                     class="thumbnail ${index === state.currentIndex ? 'active' : ''}"
-                    style="background-image: url('${img.url}')"
-                    title="${img.caption}"
+                    style="background-image: url('${escapeHtml(img.url)}')"
+                    title="${escapeHtml(img.caption)}"
                     onclick="goToImage(${index})"
                 ></div>
             `).join('')}
@@ -204,15 +210,15 @@ function render() {
         <div class="slideshow">
             <div class="image-wrapper">
                 <img 
-                    src="${currentImage.url}" 
-                    alt="${currentImage.caption}"
+                    src="${escapeHtml(currentImage.url)}" 
+                    alt="${escapeHtml(currentImage.caption)}"
                     class="slideshow-image"
                     onerror="handleImageError(this)"
                 />
             </div>
 
             <div class="caption-wrapper">
-                <p class="caption">${currentImage.caption}</p>
+                <p class="caption">${escapeHtml(currentImage.caption)}</p>
                 <p class="image-info">
                     Image ${state.currentIndex + 1} of ${state.images.length}
                 </p>
