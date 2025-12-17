@@ -2,7 +2,7 @@ const BUCKET_NAME = 'tabs.14strings.com';
 const BUCKET_URL = `https://${BUCKET_NAME}`;
 
 // Demo mode - set to true to use sample images when S3 is not accessible
-const USE_DEMO_MODE = true;
+const USE_DEMO_MODE = false;
 
 // Sample images for demo mode
 const DEMO_IMAGES = [
