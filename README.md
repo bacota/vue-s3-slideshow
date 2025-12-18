@@ -88,8 +88,8 @@ This will load sample images from Unsplash instead of the S3 bucket.
 ## How It Works
 
 1. **Direct HTTP Requests**: Uses the Fetch API to access the public S3 bucket
-2. **XML Parsing**: Parses S3 bucket listing XML responses using DOMParser
-3. **Folder Filtering**: Reads images only from the `roster` folder in the S3 bucket
+2. **ListObjectsV2 API**: Uses S3 ListObjectsV2 API with `prefix` parameter to efficiently query only the `roster` folder
+3. **XML Parsing**: Parses S3 bucket listing XML responses using DOMParser
 4. **Metadata Extraction**: Fetches object metadata using HEAD requests for the `x-amz-meta-caption` header
 5. **Image Filtering**: Only includes files with image extensions (jpg, jpeg, png, gif, webp, bmp)
 6. **Vanilla JavaScript**: Pure DOM manipulation for rendering, no frameworks needed

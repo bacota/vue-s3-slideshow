@@ -97,7 +97,9 @@ async function fetchImagesFromS3() {
     }
 
     try {
-        const response = await fetch(BUCKET_URL);
+        // Use ListObjectsV2 API with prefix parameter to filter by folder
+        const listUrl = `${BUCKET_URL}?list-type=2&prefix=${S3_FOLDER}/`;
+        const response = await fetch(listUrl);
 
         if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -113,10 +115,8 @@ async function fetchImagesFromS3() {
         const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp'];
         const imageObjects = objects.filter(obj => {
             const key = obj.Key.toLowerCase();
-            // Filter by folder and image extension
-            const isInRosterFolder = key.startsWith(S3_FOLDER.toLowerCase() + '/');
-            const isImage = imageExtensions.some(ext => key.endsWith(ext));
-            return isInRosterFolder && isImage;
+            // Only filter by image extension since prefix already filtered by folder
+            return imageExtensions.some(ext => key.endsWith(ext));
         });
 
         const imagesWithMetadata = await Promise.all(
