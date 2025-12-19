@@ -1,6 +1,7 @@
 import { fetchImagesFromS3 } from './services/s3Service.js';
 import { state, nextImage, previousImage, goToImage, toggleAutoPlay, stopAutoPlay } from './ui/state.js';
 import { render, handleImageError } from './ui/renderer.js';
+import { AUTO_PLAY_DELAY } from './config.js';
 
 /**
  * Load images from S3
@@ -53,7 +54,7 @@ window.toggleAutoPlay = () => {
         state.autoPlayInterval = setInterval(() => {
             nextImage();
             render();
-        }, 3000);
+        }, AUTO_PLAY_DELAY);
     }
     render();
 };
