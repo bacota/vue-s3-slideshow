@@ -184,7 +184,7 @@ The optimized build provides:
 - **Code Splitting**: Separates AWS SDK into dedicated chunk for efficient loading
 - **Minification**: Reduces file size with esbuild
 - **Server-side Filtering**: AWS SDK ListObjectsV2Command with Prefix parameter
-- **Bundle Size**: ~215KB for S3 service (including AWS SDK), ~7KB for UI components (total gzipped: ~68KB)
+- **Bundle Size**: S3 service chunk ~205KB (gzipped: ~64KB), UI chunks ~10KB (gzipped: ~4KB)
 
 ## Browser Compatibility
 

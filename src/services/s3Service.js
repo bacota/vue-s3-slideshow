@@ -1,13 +1,10 @@
 import { S3Client, ListObjectsV2Command, HeadObjectCommand } from '@aws-sdk/client-s3';
 import { BUCKET_NAME, BUCKET_URL, S3_FOLDER, USE_DEMO_MODE, DEMO_IMAGES } from '../config.js';
 
-// Initialize S3 client with anonymous credentials for public bucket access
+// Initialize S3 client without credentials for public bucket access
+// The SDK will handle public bucket access automatically
 const s3Client = new S3Client({
-    region: 'us-east-1', // Default region, will work for public buckets
-    credentials: {
-        accessKeyId: 'anonymous',
-        secretAccessKey: 'anonymous',
-    },
+    region: 'us-east-1', // Default region
 });
 
 /**
@@ -71,7 +68,7 @@ export async function fetchImagesFromS3() {
         });
 
         const response = await s3Client.send(command);
-        const objects = response.Contents || [];
+        const objects = response.Contents ?? [];
 
         if (objects.length === 0) {
             return [];
