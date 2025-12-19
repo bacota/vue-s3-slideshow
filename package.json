@@ -1,0 +1,26 @@
+{
+  "name": "vue-s3-slideshow",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "A simple JavaScript application that fetches and displays images from a publicly accessible AWS S3 bucket in an interactive slideshow format.",
+  "main": "src/main.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "s3",
+    "slideshow",
+    "image-gallery",
+    "vite"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "vite": "^7.3.0"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.955.0"
+  }
+}
