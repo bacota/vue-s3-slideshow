@@ -17,9 +17,9 @@ A modern JavaScript application built with Vite that fetches and displays images
 ## Tech Stack
 
 - **Vite** - Next-generation frontend build tool with tree shaking
+- **AWS SDK for JavaScript v3** - Official AWS SDK for S3 operations
 - **ES Modules** - Modern JavaScript module system
 - **Vanilla JavaScript** - No frameworks, pure JavaScript
-- **S3 ListObjectsV2 API** - Efficient server-side filtering
 
 ## Prerequisites
 
@@ -128,12 +128,12 @@ export const USE_DEMO_MODE = true;
 ## How It Works
 
 1. **Vite Build System**: Uses Vite for fast development and optimized production builds
-2. **Tree Shaking**: Automatically removes unused code for smaller bundles
-3. **Code Splitting**: Separates code into chunks (s3-service, ui) for efficient loading
-4. **ListObjectsV2 API**: Uses S3 API with `prefix` parameter for server-side filtering
-5. **ES Modules**: Modern module system with named exports/imports
-6. **XML Parsing**: Parses S3 bucket listing XML responses using DOMParser
-7. **Metadata Extraction**: Fetches object metadata using HEAD requests
+2. **AWS SDK Integration**: Uses official AWS SDK for JavaScript v3 to interact with S3
+3. **ListObjectsV2Command**: Makes ListObjectsV2 API calls with `Prefix` parameter for server-side filtering
+4. **Tree Shaking**: Automatically removes unused AWS SDK code for smaller bundles
+5. **Code Splitting**: Separates code into chunks (s3-service with AWS SDK, ui) for efficient loading
+6. **ES Modules**: Modern module system with named exports/imports
+7. **Metadata Extraction**: Uses HeadObjectCommand to fetch object metadata with fallback to HTTP HEAD requests
 8. **Image Filtering**: Only includes files with image extensions
 
 ## Deployment
@@ -180,11 +180,11 @@ vercel --prod
 ## Performance
 
 The optimized build provides:
-- **Tree Shaking**: Removes unused code
-- **Code Splitting**: Loads only necessary chunks
+- **AWS SDK Tree Shaking**: Vite automatically removes unused AWS SDK modules
+- **Code Splitting**: Separates AWS SDK into dedicated chunk for efficient loading
 - **Minification**: Reduces file size with esbuild
-- **Server-side Filtering**: S3 ListObjectsV2 with prefix parameter
-- **Small Bundle**: Typical total size ~7KB (gzipped: ~4KB)
+- **Server-side Filtering**: AWS SDK ListObjectsV2Command with Prefix parameter
+- **Bundle Size**: ~215KB for S3 service (including AWS SDK), ~7KB for UI components (total gzipped: ~68KB)
 
 ## Browser Compatibility
 

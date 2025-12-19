@@ -9,10 +9,18 @@
     "build": "vite build",
     "preview": "vite preview"
   },
-  "keywords": ["s3", "slideshow", "image-gallery", "vite"],
+  "keywords": [
+    "s3",
+    "slideshow",
+    "image-gallery",
+    "vite"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "vite": "^7.3.0"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.955.0"
   }
 }
