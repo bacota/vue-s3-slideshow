@@ -4,7 +4,7 @@ A modern JavaScript application built with Vite that fetches and displays images
 
 ## Features
 
-- 🖼️ **S3 Integration**: Fetches images directly from the `tabs.14strings.com/roster` S3 folder
+- 🖼️ **S3 Integration**: Fetches images directly from the `tabs.14strings.com/roster` S3 folder via public HTTP access
 - 📝 **Dynamic Captions**: Displays captions from S3 object metadata (`caption` key)
 - 🎨 **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
 - 🎬 **Auto-play Mode**: Toggle automatic slideshow playback
@@ -17,9 +17,9 @@ A modern JavaScript application built with Vite that fetches and displays images
 ## Tech Stack
 
 - **Vite** - Next-generation frontend build tool with tree shaking
-- **AWS SDK for JavaScript v3** - Official AWS SDK for S3 operations
 - **ES Modules** - Modern JavaScript module system
 - **Vanilla JavaScript** - No frameworks, pure JavaScript
+- **Public S3 HTTP Access** - Direct HTTP requests to publicly accessible S3 bucket
 
 ## Prerequisites
 
@@ -128,13 +128,14 @@ export const USE_DEMO_MODE = true;
 ## How It Works
 
 1. **Vite Build System**: Uses Vite for fast development and optimized production builds
-2. **AWS SDK Integration**: Uses official AWS SDK for JavaScript v3 to interact with S3
-3. **ListObjectsV2Command**: Makes ListObjectsV2 API calls with `Prefix` parameter for server-side filtering
-4. **Tree Shaking**: Automatically removes unused AWS SDK code for smaller bundles
-5. **Code Splitting**: Separates code into chunks (s3-service with AWS SDK, ui) for efficient loading
+2. **Public HTTP Access**: Makes direct HTTP requests to publicly accessible S3 bucket (no credentials needed)
+3. **ListObjectsV2 API**: Uses S3 ListObjectsV2 REST API with `prefix` query parameter for server-side filtering
+4. **Tree Shaking**: Automatically removes unused code for smaller bundles
+5. **Code Splitting**: Separates code into chunks (s3-service, ui) for efficient loading
 6. **ES Modules**: Modern module system with named exports/imports
-7. **Metadata Extraction**: Uses HeadObjectCommand to fetch object metadata with fallback to HTTP HEAD requests
-8. **Image Filtering**: Only includes files with image extensions
+7. **Metadata Extraction**: Uses HTTP HEAD requests to fetch object metadata from S3
+8. **XML Parsing**: Parses S3 bucket listing XML responses using DOMParser
+9. **Image Filtering**: Only includes files with image extensions
 
 ## Deployment
 
@@ -180,11 +181,11 @@ vercel --prod
 ## Performance
 
 The optimized build provides:
-- **AWS SDK Tree Shaking**: Vite automatically removes unused AWS SDK modules
-- **Code Splitting**: Separates AWS SDK into dedicated chunk for efficient loading
+- **Tree Shaking**: Vite automatically removes unused code for smaller bundles
+- **Code Splitting**: Separates code into optimized chunks for efficient loading
 - **Minification**: Reduces file size with esbuild
-- **Server-side Filtering**: AWS SDK ListObjectsV2Command with Prefix parameter
-- **Bundle Size**: S3 service chunk ~205KB (gzipped: ~64KB), UI chunks ~10KB (gzipped: ~4KB)
+- **Server-side Filtering**: S3 ListObjectsV2 REST API with prefix parameter
+- **Small Bundle Size**: ~12KB total (gzipped: ~5KB) - no heavy dependencies!
 
 ## Browser Compatibility
 
