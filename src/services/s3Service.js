@@ -16,12 +16,13 @@ async function fetchObjectMetadata(url) {
         const headers = response.headers;
         const metadata = {};
 
-        for (let [key, value] of headers.entries()) {
+        // Extract S3 metadata headers (x-amz-meta-*)
+        headers.forEach((value, key) => {
             if (key.startsWith('x-amz-meta-')) {
-                const metaKey = key.replace('x-amz-meta-', '');
+                const metaKey = key.substring(11); // Remove 'x-amz-meta-' prefix
                 metadata[metaKey] = value;
             }
-        }
+        });
 
         return metadata;
     } catch (error) {
@@ -43,8 +44,11 @@ export async function fetchImagesFromS3() {
 
     try {
         // Use ListObjectsV2 API with prefix parameter to filter by folder
-        const listUrl = `${BUCKET_URL}?list-type=2&prefix=${S3_FOLDER}/`;
-        const response = await fetch(listUrl);
+        const url = new URL(BUCKET_URL);
+        url.searchParams.set('list-type', '2');
+        url.searchParams.set('prefix', `${S3_FOLDER}/`);
+        
+        const response = await fetch(url.toString());
 
         if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
