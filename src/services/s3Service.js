@@ -1,38 +1,56 @@
-import { BUCKET_URL, S3_FOLDER, USE_DEMO_MODE, DEMO_IMAGES } from '../config.js';
-import { parseS3ListResponse } from '../utils/helpers.js';
+import { S3Client, ListObjectsV2Command, HeadObjectCommand } from '@aws-sdk/client-s3';
+import { BUCKET_NAME, BUCKET_URL, S3_FOLDER, USE_DEMO_MODE, DEMO_IMAGES } from '../config.js';
+
+// Initialize S3 client without credentials for public bucket access
+// The SDK will handle public bucket access automatically
+const s3Client = new S3Client({
+    region: 'us-east-1', // Default region
+});
 
 /**
- * Fetch object metadata from S3 using HTTP HEAD request
- * @param {string} url - Object URL
+ * Fetch object metadata from S3 using AWS SDK
+ * @param {string} key - Object key
  * @returns {Promise<Object>} Metadata object
  */
-async function fetchObjectMetadata(url) {
+async function fetchObjectMetadata(key) {
     try {
-        const response = await fetch(url, { method: 'HEAD' });
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
-        }
-
-        const headers = response.headers;
-        const metadata = {};
-
-        // Extract S3 metadata headers (x-amz-meta-*)
-        headers.forEach((value, key) => {
-            if (key.startsWith('x-amz-meta-')) {
-                const metaKey = key.substring(11); // Remove 'x-amz-meta-' prefix
-                metadata[metaKey] = value;
-            }
+        const command = new HeadObjectCommand({
+            Bucket: BUCKET_NAME,
+            Key: key,
         });
-
-        return metadata;
+        
+        const response = await s3Client.send(command);
+        return response.Metadata || {};
     } catch (error) {
-        console.warn(`Failed to fetch metadata for ${url}:`, error.message);
-        return {};
+        console.warn(`Failed to fetch metadata for ${key}:`, error.message);
+        // Fallback to HTTP HEAD request for public buckets
+        try {
+            const url = `${BUCKET_URL}/${key}`;
+            const httpResponse = await fetch(url, { method: 'HEAD' });
+            if (!httpResponse.ok) {
+                return {};
+            }
+
+            const headers = httpResponse.headers;
+            const metadata = {};
+
+            for (let [headerKey, value] of headers.entries()) {
+                if (headerKey.startsWith('x-amz-meta-')) {
+                    const metaKey = headerKey.replace('x-amz-meta-', '');
+                    metadata[metaKey] = value;
+                }
+            }
+
+            return metadata;
+        } catch (fallbackError) {
+            console.warn(`Fallback fetch also failed for ${key}:`, fallbackError.message);
+            return {};
+        }
     }
 }
 
 /**
- * Fetch images from S3 bucket using public HTTP access
+ * Fetch images from S3 bucket using AWS SDK
  * @returns {Promise<Array>} Array of image objects
  */
 export async function fetchImagesFromS3() {
@@ -43,19 +61,14 @@ export async function fetchImagesFromS3() {
     }
 
     try {
-        // Use ListObjectsV2 API with prefix parameter to filter by folder
-        const url = new URL(BUCKET_URL);
-        url.searchParams.set('list-type', '2');
-        url.searchParams.set('prefix', `${S3_FOLDER}/`);
-        
-        const response = await fetch(url.toString());
+        // Use AWS SDK ListObjectsV2Command with prefix parameter
+        const command = new ListObjectsV2Command({
+            Bucket: BUCKET_NAME,
+            Prefix: `${S3_FOLDER}/`,
+        });
 
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-
-        const xmlText = await response.text();
-        const objects = parseS3ListResponse(xmlText);
+        const response = await s3Client.send(command);
+        const objects = response.Contents ?? [];
 
         if (objects.length === 0) {
             return [];
@@ -71,7 +84,7 @@ export async function fetchImagesFromS3() {
         const imagesWithMetadata = await Promise.all(
             imageObjects.map(async (obj) => {
                 const url = `${BUCKET_URL}/${obj.Key}`;
-                const metadata = await fetchObjectMetadata(url);
+                const metadata = await fetchObjectMetadata(obj.Key);
 
                 return {
                     key: obj.Key,
